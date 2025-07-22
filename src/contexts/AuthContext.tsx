@@ -42,37 +42,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const res = await fetch('http://localhost:4000/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch('http://localhost:4000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (!res.ok) {
-      alert('Login failed');
-      return;
+      if (!res.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await res.json();
+      localStorage.setItem('token', data.token);
+      setToken(data.token);
+      setUser(data.user);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error; // Re-throw to let components handle it
     }
-
-    const data = await res.json();
-    localStorage.setItem('token', data.token);
-    setToken(data.token);
-    setUser(data.user);
-    setIsAuthenticated(true);
   };
 
   const register = async (name: string, email: string, password: string) => {
-    const res = await fetch('http://localhost:4000/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
-    });
+    try {
+      const res = await fetch('http://localhost:4000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    if (!res.ok) {
-      alert('Registration failed');
-      return;
+      if (!res.ok) {
+        throw new Error('Registration failed');
+      }
+
+      const data = await res.json();
+      
+      // Automatically log in after registration
+      localStorage.setItem('token', data.token);
+      setToken(data.token);
+      setUser(data.user);
+      setIsAuthenticated(true);
+      
+      return data; // Return the data in case components need it
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error;
     }
-
-    alert('Account created! Please log in.');
   };
 
   const logout = () => {

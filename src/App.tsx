@@ -1,14 +1,14 @@
 // src/App.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
+import Home from './pages/login & home/Home';
 // import Gift from './pages/Gift';
 // import YourGifts from './pages/YourGifts';
 // import YourProfile from './pages/YourGifts';
-import Register from './pages/Register';
-import Login from './pages/Login';
+import Register from './pages/login & home/Register';
+import Login from './pages/login & home/Login';
 // import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import './App.css';
 
 function App() {

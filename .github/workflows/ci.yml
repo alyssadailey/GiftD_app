@@ -7,7 +7,7 @@ on:
     branches: [develop]
 
 jobs:
-  test:
+  cypress-run:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,5 +22,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm run test
+      - name: Start the app
+        run: npm run dev &
+        env:
+          PORT: 5173
+
+      - name: Wait for app to be ready
+        uses: jakejarvis/wait-action@v0.1.0
+        with:
+          url: http://localhost:5173
+          timeout: 30
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          wait-on: http://localhost:5173
+          wait-on-timeout: 60
